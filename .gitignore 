@@ -1,0 +1,14 @@
+# SPOT-1D data and outputs
+spot_1d_single/
+spot1d_outputs/
+SPOT-1D-Single/
+
+# Large tarballs or compressed archives
+*.tar.gz
+*.zip
+
+# BLAST database
+blast_db/
+
+# VS Code workspace files
+.vscode/

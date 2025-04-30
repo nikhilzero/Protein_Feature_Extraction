@@ -1,0 +1,7 @@
+spot_1d_single/
+spot1d_outputs/
+SPOT-1D-Single/
+blast_db/
+*.tar.gz
+*.zip
+.vscode/
