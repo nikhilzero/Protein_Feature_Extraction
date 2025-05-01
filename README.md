@@ -107,6 +107,66 @@ Following the generation of SPOT-1D outputs, the following structural features w
 | SS3 Autocovariance (Lag 10)      | 30 |
 | Torsion Composition (Phi, Psi, Theta, Tau) | 4 |
 
+
+### Step 7: Merging Features and Labels
+
+- Cleaned Protein_IDs by removing `>` and whitespace.
+- Merged all six features using `Protein_ID` as the key.
+- Joined with labels from `g_data.csv`.
+
+```bash
+python merge_features.py
+python merge_labels.py
+```
+
+**Output:** `final_training_data.csv`
+
+---
+
+### Step 8: Model Training
+
+#### Trained Models:
+- SVM (RBF kernel) — `C=3000`, `γ=0.005`
+- K-Nearest Neighbors
+- Naive Bayes
+- Random Forest
+- Bagging Classifier
+- ANN (MLPClassifier)
+
+#### Evaluation:
+- Train/Test Split (80/20)
+- 10-Fold Cross-Validation
+- Jackknife (LOOCV)
+
+---
+
+### Step 9: Model Evaluation Results
+
+| Model            | 10-Fold CV Accuracy | Jackknife Accuracy |
+|------------------|---------------------|--------------------|
+| SVM              | 67.11%              | 67.88%             |
+| K-NN             | 68.25%              | –                  |
+| Naive Bayes      | 60.63%              | –                  |
+| Random Forest    | 73.05%              | 72.66%             |
+| Bagging          | 71.14%              | 71.89%             |
+| ANN (MLP)        | 72.26%              | 71.51%             |
+
+✅ **Best Performer:** Random Forest  
+✅ **Most Consistent:** Random Forest & ANN
+
+---
+
+### Step 10: Visualization
+
+- 10-Fold CV accuracy comparison saved as:
+```
+Evaluation/accuracy_plot.png
+```
+![Model Accuracy](Model_Performance_10Fold_CV.png)
+
+---
+
+
 Scripts used:
 
 - `code/extract_asa_bigram.py` → outputs `features/asa_bigram.csv`
@@ -116,7 +176,7 @@ Scripts used:
 ### Details:
 - **ASA Bigram**: Mean of ASA[i] × ASA[i+2] across sequence.
 - **SS3 Autocovariance**: Measures autocorrelation for Coil (C), Helix (H), and Strand (E) probabilities across 10 lags.
-- **Torsion Composition**: Simple mean of torsion angles Phi, Psi, Theta, Tau.
+- **Torsion Composition**: A simple means of torsion angles is Phi, Psi, Theta, Tau.
 
 ---
 
@@ -150,7 +210,17 @@ ML_Final_project/
 ├── environment.yml
 └── requirements.txt
 ```
-
+```bash
+python generate_fasta.py
+bash code/run_psiblast.sh
+python code/run_spot1d_batch.py
+python extract_all_features.py
+python merge_features.py
+python merge_labels.py
+python train_svm.py
+python train_cv.py
+python train_jackknife.py
+```
 ---
 
 ## Key Implementation Details and Fixes
@@ -160,6 +230,10 @@ ML_Final_project/
 - Corrected file path handling inside SPOT-1D-Single.
 - Created clean, parallelized batch processing.
 - Safely handled missing output files and sequences during feature extraction.
+- Cleaned inconsistent header formats
+- Merged features and labels robustly
+- Handled class imbalance (Fold2 had very few samples)
+
 
 ---
 
