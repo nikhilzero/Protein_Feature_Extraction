@@ -3,8 +3,8 @@ from sklearn.model_selection import LeaveOneOut, cross_val_score
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 
-# Step 1: Load the final merged dataset
-data = pd.read_csv('final_training_data.csv')
+# Step 1: Load the final merged dataset (relative path)
+data = pd.read_csv('features/final_training_data.csv')
 
 # Step 2: Separate features and labels
 X = data.drop(columns=['Protein_ID', 'Fold'])  # Features
