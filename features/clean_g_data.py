@@ -1,31 +1,34 @@
 import pandas as pd
+from pathlib import Path
 
-# Load the messy g_data
-g_data = pd.read_csv('g_data.csv')
+# Set base directory (assuming this script is in /features/)
+base_dir = Path(__file__).parent
 
-# Check the first few rows to understand structure
-print(g_data.head())
+# File paths
+raw_g_data_path = base_dir / 'g_data.csv'
+clean_labels_path = base_dir / 'labels.csv'
 
-# Create a clean DataFrame
+# Load messy g_data file
+g_data = pd.read_csv(raw_g_data_path)
 
+# Initialize lists for Protein_IDs and Folds
 protein_ids = []
 folds = []
 
-# Each row has messed up headers, so we need to parse manually
+# Parse column headers to extract protein IDs and their corresponding fold types
 for col in g_data.columns:
     if col.startswith('>'):
-        # Remove '>' symbol
-        protein_id = col[1:]
+        protein_id = col[1:].strip()
         protein_ids.append(protein_id)
-        folds.append(g_data[col].iloc[0])  # take the first value (maybe the fold name or type)
+        folds.append(g_data[col].iloc[0])  # First row typically has the fold label
 
-# Now create clean DataFrame
+# Create cleaned DataFrame
 labels_df = pd.DataFrame({
     'Protein_ID': protein_ids,
     'Fold': folds
 })
 
-# Save it
-labels_df.to_csv('labels.csv', index=False)
+# Save to labels.csv
+labels_df.to_csv(clean_labels_path, index=False)
 
-print("\n✅ Clean labels.csv created successfully!")
+print(f"\n✅ Clean labels.csv created at: {clean_labels_path}")
