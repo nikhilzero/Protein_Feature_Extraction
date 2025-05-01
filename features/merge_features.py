@@ -1,16 +1,21 @@
 import pandas as pd
 import os
 
-# Corrected Paths (DO NOT include 'Features/')
-pssm_aao_path = 'pssm/pssm_aao.csv'
-pssm_sd_path = 'pssm/pssm_sd.csv'
-pssm_sac_path = 'pssm/pssm_sac.csv'
+# Define base paths (relative to project root)
+base_dir = os.path.dirname(__file__)  # current script location
+pssm_dir = os.path.join(base_dir, 'pssm')
+spot1d_dir = os.path.join(base_dir, 'spot1d')
 
-ss3_autocov_path = 'spot1d/ss3_autocov.csv'
-torsion_comp_path = 'spot1d/torsion_composition.csv'
-asa_bigram_path = 'spot1d/asa_bigram.csv'
+# Paths to CSV files
+pssm_aao_path = os.path.join(pssm_dir, 'pssm_aao.csv')
+pssm_sd_path = os.path.join(pssm_dir, 'pssm_sd.csv')
+pssm_sac_path = os.path.join(pssm_dir, 'pssm_sac.csv')
 
-# Load each feature file
+ss3_autocov_path = os.path.join(spot1d_dir, 'ss3_autocov.csv')
+torsion_comp_path = os.path.join(spot1d_dir, 'torsion_composition.csv')
+asa_bigram_path = os.path.join(spot1d_dir, 'asa_bigram.csv')
+
+# Load CSVs
 pssm_aao = pd.read_csv(pssm_aao_path)
 pssm_sd = pd.read_csv(pssm_sd_path)
 pssm_sac = pd.read_csv(pssm_sac_path)
@@ -19,15 +24,15 @@ ss3_autocov = pd.read_csv(ss3_autocov_path)
 torsion_comp = pd.read_csv(torsion_comp_path)
 asa_bigram = pd.read_csv(asa_bigram_path)
 
-# Merge all feature tables on 'Protein_ID'
+# Merge all features on Protein_ID
 merged_features = pssm_aao.merge(pssm_sd, on='Protein_ID') \
                            .merge(pssm_sac, on='Protein_ID') \
                            .merge(ss3_autocov, on='Protein_ID') \
                            .merge(torsion_comp, on='Protein_ID') \
                            .merge(asa_bigram, on='Protein_ID')
 
-# Save the merged features
-merged_output_file = 'merged_features.csv'
-merged_features.to_csv(merged_output_file, index=False)
+# Save output to project root
+output_path = os.path.join(base_dir, 'merged_features.csv')
+merged_features.to_csv(output_path, index=False)
 
-print(f"\n✅ Merged features saved successfully to: {merged_output_file}")
+print(f"\n✅ Merged features saved successfully to: {output_path}")
